@@ -20,7 +20,7 @@ function clearCards() {
     galleryList.innerHTML = '';
 }
 
-const getData = async (checkMsg) => {
+const getData = async (checker) => {
     if (!inputData.value) {
         return;
     };
@@ -36,7 +36,7 @@ const getData = async (checkMsg) => {
 
     printImg(parsedData.hits)
     loadMoreBtn.style.display = 'block';
-    if (checkMsg) {
+    if (checker) {
         Notiflix.Notify.info(
             `Hooray! We found ${parsedData.totalHits} images.`
         );
@@ -44,10 +44,12 @@ const getData = async (checkMsg) => {
 
     if (document.querySelectorAll('.photo-card').length >= parsedData.totalHits) {
         loadMoreBtn.style.display = 'none';
-        Notiflix.Notify.info(
-            "We're sorry, but you've reached the end of search results."
-        );
-    }
+        if (parsedData.totalHits > 40) {
+            Notiflix.Notify.info(
+                "We're sorry, but you've reached the end of search results."
+            );
+        };
+    };
 
 
     const lightbox = new SimpleLightbox('.gallery a', {
@@ -86,16 +88,23 @@ function printImg(data) {
                                 </p>
                             </div>
                         </div>`;
-        })
-        .join('');
+        }).join('');
     galleryList.insertAdjacentHTML('beforeend', markUp);
 }
 
-
 loadMoreBtn.addEventListener('click', async (e) => {
-
     page += 1;
     await getData(false);
     console.log(page);
+});
 
+
+//===========================
+
+const { height: cardHeight } = galleryList.firstElementChild.getBoundingClientRect();
+
+console.log(cardHeight)
+window.scrollBy({
+    top: cardHeight * 2,
+    behavior: "smooth",
 });
