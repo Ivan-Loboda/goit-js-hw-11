@@ -61,6 +61,7 @@ const getData = async (checker) => {
 inputForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearCards();
+    loadMoreBtn.style.display = 'none';
     page = 1;
     await getData(true);
 });
