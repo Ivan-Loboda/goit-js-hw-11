@@ -101,10 +101,10 @@ loadMoreBtn.addEventListener('click', async (e) => {
 
 //===========================
 
-const { height: cardHeight } = galleryList.firstElementChild.getBoundingClientRect();
+// const { height: cardHeight } = galleryList.firstElementChild.getBoundingClientRect();
 
-console.log(cardHeight)
-window.scrollBy({
-    top: cardHeight * 2,
-    behavior: "smooth",
-});
+// console.log(cardHeight)
+// window.scrollBy({
+//     top: cardHeight * 2,
+//     behavior: "smooth",
+// });
