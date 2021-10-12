@@ -13,7 +13,7 @@ const inputForm = document.querySelector('#search-form');
 const inputData = inputForm.elements['searchQuery'];
 const galleryList = document.querySelector('.gallery')
 const loadMoreBtn = document.querySelector('.load-more')
-
+loadMoreBtn.style.display = 'none';
 let page = 1;
 
 function clearCards() {
@@ -24,19 +24,29 @@ const getData = async () => {
     if (!inputData.value) {
         return;
     };
-    // console.log(inputData.value)
 
-    await fetchImages(inputData.value, page)
-        .then(response => {
-            const parsedData = response.data.hits;
-            console.log(parsedData)
-            if (parsedData.length === 0) {
-                Notiflix.Notify.failure(
-                    'Sorry, there are no images matching your search query. Please try again.',
-                );
-            }
-            else printImg(parsedData);
-        })
+    const response = await fetchImages(inputData.value, page);
+
+    const parsedData = response.data;
+    if (parsedData.hits.length === 0) {
+        return Notiflix.Notify.failure(
+            'Sorry, there are no images matching your search query. Please try again.',
+        );
+    }
+
+    printImg(parsedData.hits)
+    loadMoreBtn.style.display = 'block';
+    Notiflix.Notify.info(
+        `Hooray! We found ${parsedData.totalHits} images.`
+    );
+
+    if (document.querySelectorAll('.photo-card').length >= parsedData.totalHits) {
+        loadMoreBtn.style.display = 'none';
+        Notiflix.Notify.info(
+            "We're sorry, but you've reached the end of search results."
+        );
+    }
+
 
     const lightbox = new SimpleLightbox('.gallery a', {
         captionDelay: 250,
@@ -44,9 +54,10 @@ const getData = async () => {
 
 }
 
-inputForm.addEventListener('submit', async e => {
+inputForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearCards();
+    page = 1;
     await getData();
 });
 
@@ -57,7 +68,7 @@ function printImg(data) {
             const { tags, likes, views, comments, downloads, webformatURL, largeImageURL } = item;
             return `<div class="photo-card">
                         <a href=${largeImageURL}>
-                        <img src="${webformatURL}" alt="${tags}" loading="lazy" width='200'/></a>
+                        <img src="${webformatURL}" alt="${tags}" loading="lazy" width='300' height='170'/></a>
                         <div class="info">
                                 <p class="info-item">
                                     <b>Likes:</b>${likes}
@@ -79,7 +90,7 @@ function printImg(data) {
 }
 
 
-loadMoreBtn.addEventListener('click', async e => {
+loadMoreBtn.addEventListener('click', async (e) => {
 
     page += 1;
     await getData();

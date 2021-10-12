@@ -1,4 +1,23 @@
 .gallery {
     display: flex;
     flex-wrap: wrap;
+    margin-top: 50px;
+    margin-left: 50px;
+}
+
+.photo-card {
+    width: 350px;
+    height: 400px;
+    margin-right: 50px;
+    margin-bottom: 50px;
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 20px;
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 50px;
+    }
 }
