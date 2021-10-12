@@ -20,7 +20,7 @@ function clearCards() {
     galleryList.innerHTML = '';
 }
 
-const getData = async () => {
+const getData = async (checkMsg) => {
     if (!inputData.value) {
         return;
     };
@@ -36,9 +36,11 @@ const getData = async () => {
 
     printImg(parsedData.hits)
     loadMoreBtn.style.display = 'block';
-    Notiflix.Notify.info(
-        `Hooray! We found ${parsedData.totalHits} images.`
-    );
+    if (checkMsg) {
+        Notiflix.Notify.info(
+            `Hooray! We found ${parsedData.totalHits} images.`
+        );
+    }
 
     if (document.querySelectorAll('.photo-card').length >= parsedData.totalHits) {
         loadMoreBtn.style.display = 'none';
@@ -58,7 +60,7 @@ inputForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearCards();
     page = 1;
-    await getData();
+    await getData(true);
 });
 
 
@@ -93,6 +95,7 @@ function printImg(data) {
 loadMoreBtn.addEventListener('click', async (e) => {
 
     page += 1;
-    await getData();
+    await getData(false);
     console.log(page);
+
 });
